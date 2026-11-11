@@ -123,13 +123,3 @@ fi
 if command -v qlink >/dev/null 2>&1; then
     source <(qlink)
 fi
-
-# =============================================================================
-# Dotfiles Scripts Path
-# =============================================================================
-
-# Add dotfiles bin to PATH
-export PATH="$HOME/.local/bin:$PATH"
-
-# Dotfiles sync utility
-# Usage: ~/bin/dotfiles/sync [status|apply|revert|diff|pull|push]
