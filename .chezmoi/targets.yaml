@@ -1,0 +1,27 @@
+# Chezmoi target configuration
+# Maps source files to their deployment locations
+
+# Home directory dotfiles
+- .dotfiles:
+    .zshrc: dotfiles/.zshrc
+
+# Local share directory
+- .local/share:
+    dotfiles:
+        backup: dotfiles/.zshrc
+        sync-status: dotfiles/.zshrc
+
+# Config directory
+- .config:
+    zsh:
+        .zshrc: dotfiles/.zshrc
+    nvim:
+        lua/lazyvim/config:
+            lspconfig.lua.local: dotfiles/nvim/lua/lazyvim/config/lspconfig.lua.local
+            init.lua: dotfiles/nvim/lua/config/init.lua
+
+# Local bin directory for utilities
+- .local/bin:
+    dotfiles:
+        sync: dotfiles/scripts/dotfiles-sync.sh
+        apply: dotfiles/scripts/apply-configs.sh

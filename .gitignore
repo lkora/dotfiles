@@ -1,0 +1,30 @@
+# Dotfiles .gitignore
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup directories
+*.bak
+*.backup
+*.orig
+
+# OS generated files
+.DS_Store
+.Spotlight-V100
+.Trashes
+._*
+
+# Dotfiles repo internal
+tests/backups/
+tests/temp/
+
+# Generated configs (if not tracked)
+!configs/nvim/lua/config/plugins.lua
+
+# Local development
+.env
+.env.local

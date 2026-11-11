@@ -1,0 +1,26 @@
+[Unit]
+Description=Dotfiles Sync Service
+Documentation=https://github.com/lkora/dotfiles
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bash -c 'rsync -a --delete --checksum --inplace --itemize-changes \
+    /home/$USER/.dotfiles/ /home/$USER/.dotfiles/'
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=300
+User=$USER
+Group=$USER
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dotfiles-sync
+
+# Security hardening
+ProtectSystem=strict
+ReadWritePaths=/home/$USER/.dotfiles
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

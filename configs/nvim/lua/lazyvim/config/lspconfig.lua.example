@@ -1,0 +1,78 @@
+-- =============================================================================
+-- LazyVim Configuration Example
+-- Purpose: Example configuration for new users
+-- Instructions: Copy to lspconfig.lua.local and modify
+-- =============================================================================
+
+-- This is an EXAMPLE file. Copy it to lspconfig.lua.local to use it.
+
+-- Example: Minimal LSP setup for most languages
+LspConfig.setup {
+  -- Diagnostics
+  diagnostics = {
+    virtual_text = {
+      format = function(diagnostic)
+        local sign = string.sub(diagnostic.sign, 1, 1)
+        local msg = string.sub(diagnostic.message, 1, 50)
+        return (sign .. " " .. msg)
+      end,
+      update_in_insert = true,
+      severity_sort = true,
+    },
+  },
+
+  -- Keymaps
+  mappings = {
+    n = {
+      ["<leader>rn"] = "<cmd>lua vim.lsp.buf.rename()<cr>",
+      ["<leader>ca"] = "<cmd>lua vim.lsp.buf.code_action()<cr>",
+      ["<leader>gd"] = "<cmd>lua vim.lsp.buf.definition()<cr>",
+      ["<leader>gi"] = "<cmd>lua vim.lsp.buf.implementation()<cr>",
+      ["<leader>hw"] = "<cmd>lua vim.lsp.buf.hover()<cr>",
+      ["<leader>qf"] = "<cmd>Telescope diagnostics.buf<cr>",
+    },
+  },
+
+  -- Treesitter context
+  treesitter = {
+    enabled = true,
+  },
+
+  -- Inlay hints
+  inlay_hints = {
+    enabled = true,
+  },
+
+  -- Document links
+  document_link = {
+    enabled = true,
+  },
+
+  -- Document highlight
+  document_highlight = {
+    enabled = true,
+  },
+}
+
+-- Example: LSP servers configuration (commented out - customize as needed)
+-- LspConfig.servers = {
+--   ["lua_ls"] = {
+--     cmd = { "/usr/local/bin/lua-language-server", "--root-dir", "%l" },
+--     filetypes = { "lua", "luau" },
+--     settings = {
+--       Lua = {
+--         diagnostics = {
+--           globals = { "vim" },
+--         },
+--       },
+--     },
+--   },
+--   ["pylsp"] = {
+--     cmd = { "/usr/bin/pylsp" },
+--     filetypes = { "python" },
+--   },
+--   ["tailwindcss_lsp"] = {
+--     cmd = { "/usr/bin/tailwindcss-language-server" },
+--     filetypes = { "typescript", "javascript" },
+--   },
+-- }

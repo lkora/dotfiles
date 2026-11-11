@@ -1,0 +1,35 @@
+name: Validate Dotfiles
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Smoke Tests
+        run: |
+          chmod +x ./tests/smoke/check-structure.sh
+          ./tests/smoke/check-structure.sh
+
+      - name: Run Unit Tests
+        run: |
+          chmod +x ./tests/unit/check-config.sh
+          ./tests/unit/check-config.sh
+
+      - name: Run Integration Tests
+        run: |
+          mkdir -p /tmp/mock-user
+          chmod +x ./tests/integration/check-sync.sh
+          sudo -E bash ./tests/integration/check-sync.sh
