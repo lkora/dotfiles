@@ -1,35 +1,38 @@
-name: Validate Dotfiles
-
+name: Check dotfiles
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-  schedule:
-    - cron: '0 0 * * 0'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+permissions:
+  contents: read
 jobs:
-  validate:
+  configuration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Run Smoke Tests
+      - name: Install check tools
         run: |
-          chmod +x ./tests/smoke/check-structure.sh
-          ./tests/smoke/check-structure.sh
-
-      - name: Run Unit Tests
+          sudo apt-get update
+          sudo apt-get install -y zsh shellcheck neovim
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Check shell scripts
         run: |
-          chmod +x ./tests/unit/check-config.sh
-          ./tests/unit/check-config.sh
-
-      - name: Run Integration Tests
+          shellcheck scripts/* dev/*.sh tests/*.sh home/dot_local/bin/executable_dev
+          zsh -n home/dot_zshrc
+      - name: Check real chezmoi deployment
+        run: python3 tests/check.py
+      - name: Check Fedora desktop configuration
         run: |
-          mkdir -p /tmp/mock-user
-          chmod +x ./tests/integration/check-sync.sh
-          sudo -E bash ./tests/integration/check-sync.sh
+          docker run --rm -i -v "$PWD:/dotfiles:ro" --entrypoint bash \
+            quay.io/fedora-ostree-desktops/sway-atomic:45 < tests/desktop.sh
+  development-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build development image
+        run: docker build -t dotfiles-dev:check -f dev/Containerfile dev
+      - name: Check development tools
+        run: |
+          docker run --rm --entrypoint bash dotfiles-dev:check -lc \
+            'asdf version && uv --version && cc --version && c++ --version && cmake --version && nvim --version'

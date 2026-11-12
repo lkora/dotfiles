@@ -1,0 +1,8 @@
+{{ if ne .chezmoi.os "linux" }}
+*
+{{ else if not (get . "swayDesktop") }}
+.config/sway
+.config/waybar
+.config/foot
+.config/mako
+{{ end }}

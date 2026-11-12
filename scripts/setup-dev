@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+[[ "$(uname -s)" == Linux ]] || { echo "This command requires Linux." >&2; exit 1; }
+[[ $EUID -ne 0 ]] || { echo "Run this command as your normal user." >&2; exit 1; }
+command -v podman >/dev/null
+command -v distrobox >/dev/null
+podman build --tag localhost/dotfiles-dev:45 --file "$repo/dev/Containerfile" "$repo/dev"
+if podman container exists dev; then
+    echo "The dev box already exists. Recreate it explicitly to use the new image."
+else
+    DBX_CONTAINER_MANAGER=podman distrobox assemble create --file "$repo/dev/distrobox.ini"
+fi
+echo "Enter with: dev"
+echo "Inside a project, run: install-dev-runtimes"

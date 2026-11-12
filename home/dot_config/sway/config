@@ -1,0 +1,4 @@
+# Preserve distro keybindings, session integration, and authentication agents.
+include /etc/sway/config
+include ~/.config/sway/preferences.conf
+include ~/.config/sway/local.d/*.conf

@@ -1,0 +1,38 @@
+# Shared Linux shell configuration. Package installation is a separate step.
+autoload -Uz compinit
+compinit
+setopt autocd interactivecomments histignorealldups sharehistory
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+mkdir -p -- "${HISTFILE:h}"
+HISTSIZE=10000
+SAVEHIST=10000
+typeset -U path PATH
+path=("$HOME/.local/bin" $path)
+export EDITOR=nvim
+export VISUAL=nvim
+
+# asdf exists in the development container. Host shells remain independent.
+if (( $+commands[asdf] )); then
+    export ASDF_DATA_DIR="${ASDF_DATA_DIR:-$HOME/.local/share/asdf}"
+    path=("$ASDF_DATA_DIR/shims" $path)
+fi
+PROMPT='%F{blue}%n@%m%f %F{magenta}%~%f %# '
+bindkey -e
+alias gs='git status'
+alias ga='git add'
+alias gd='git diff'
+alias glg='git log --oneline --graph --decorate --all'
+alias ll='ls -la'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias v='nvim'
+if (( $+commands[eza] )); then
+    alias ls='eza --group-directories-first'
+    alias tree='eza --tree'
+fi
+if (( $+commands[fzf] )); then
+    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border'
+fi
+local_config="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/local.zsh"
+[[ ! -r "$local_config" ]] || source "$local_config"
+unset local_config

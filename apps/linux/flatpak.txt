@@ -1,0 +1,11 @@
+# One Flathub application ID per line.
+io.gitlab.librewolf-community
+org.videolan.VLC
+com.obsproject.Studio
+org.kde.Krita
+md.obsidian.Obsidian
+com.getmailspring.Mailspring
+org.telegram.desktop
+org.signal.Signal
+com.discordapp.Discord
+com.valvesoftware.Steam

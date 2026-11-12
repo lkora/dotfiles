@@ -18,12 +18,7 @@
 .Trashes
 ._*
 
-# Dotfiles repo internal
-tests/backups/
-tests/temp/
-
-# Generated configs (if not tracked)
-!configs/nvim/lua/config/plugins.lua
+__pycache__/
 
 # Local development
 .env

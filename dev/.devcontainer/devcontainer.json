@@ -1,0 +1,14 @@
+{
+  "name": "Linux development",
+  "build": { "dockerfile": "../Containerfile", "context": ".." },
+  "remoteUser": "developer",
+  "remoteEnv": {
+    "ASDF_DATA_DIR": "/home/developer/.local/share/asdf",
+    "PATH": "/home/developer/.local/share/asdf/shims:${containerEnv:PATH}"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-vscode.cpptools", "ms-python.python", "jakebecker.elixir-ls"]
+    }
+  }
+}

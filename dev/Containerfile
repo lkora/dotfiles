@@ -1,0 +1,18 @@
+FROM ghcr.io/astral-sh/uv:0.13.7 AS uv
+FROM registry.fedoraproject.org/fedora-toolbox:45
+ARG ASDF_VERSION=0.20.2
+RUN dnf5 -y install \
+      gcc gcc-c++ clang clang-tools-extra gdb make cmake ninja-build \
+      autoconf automake libtool openssl-devel ncurses-devel unixODBC-devel \
+      git curl jq tar gzip xz unzip patch perl zsh neovim ripgrep fd-find chezmoi \
+    && dnf5 clean all \
+    && useradd --create-home --uid 10000 --shell /bin/zsh developer \
+    && printf 'developer ALL=(ALL) NOPASSWD: ALL\n' > /etc/sudoers.d/developer
+RUN case "$(uname -m)" in x86_64) arch=amd64 ;; aarch64) arch=arm64 ;; *) exit 1 ;; esac \
+    && curl -fL "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-${arch}.tar.gz" -o /tmp/asdf.tar.gz \
+    && tar -xzf /tmp/asdf.tar.gz -C /usr/local/bin asdf \
+    && rm /tmp/asdf.tar.gz
+COPY --from=uv /uv /uvx /usr/local/bin/
+COPY profile.sh /etc/profile.d/dotfiles-dev.sh
+COPY install-runtimes.sh /usr/local/bin/install-dev-runtimes
+RUN chmod 0755 /usr/local/bin/install-dev-runtimes

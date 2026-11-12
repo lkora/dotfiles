@@ -1,0 +1,4 @@
+{{- $defaultDesktop := and (eq .chezmoi.os "linux") (not (empty (env "SWAYSOCK"))) -}}
+{{- $desktop := promptBoolOnce . "swayDesktop" "Apply personal Sway desktop configuration" $defaultDesktop -}}
+[data]
+swayDesktop = {{ $desktop }}
